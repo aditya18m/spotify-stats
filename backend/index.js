@@ -12,9 +12,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../frontend/spotify-stats/templates'));
 app.use(express.static(path.join(__dirname, '../frontend/spotify-stats')));
 
-// app.get('/topArtists', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'frontend', 'templates', 'topArtists.html'));
-// });
 
 const session = require('express-session');
 
@@ -88,19 +85,11 @@ app.get('/callback', async (req, res) => {
         });
 
         const accessToken = response.data.access_token;
-
-        // Fetch the user's display name
         const userInfoResponse = await axios.get('https://api.spotify.com/v1/me', {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         const displayName = userInfoResponse.data.display_name;
-
-        console.log('displayName:', displayName); // Log displayName
-
-        // Render success.ejs and pass the display name and accessToken as local variables
         res.render('success', { displayName, accessToken });
-
-        // Fetch the user's top 10 tracks and top 10 artists if needed
     } catch (error) {
         if (error.response && error.response.data) {
             console.error('Error exchanging authorization code:', error.response.data);
